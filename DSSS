@@ -1,96 +1,93 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-char data [3];
-char xnorValue [11];
-char pattern [11] = {'1', '0', '1', '1', '0', '1', '1', '1', '0', '0', '0'};
-char res [33];
-char resReceiver[33];
-int ptr = 0;
-int ptrReceiver = 0;
-char chunk [11];
-int start=0;
-int end = 10;
+int bSeq[11] = {1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0};
+int dataSeq[11];
+int dataSignal[100];
+int receivedSignal[100];
+int receivedDataSeq[11];
+int datalen, i, j, k, dslen;
 
-void xnorfunction(char bit,char pattern[]){
+void XNOR(int dataSeq[], int bSeq[]);
+void sender(int data[]);
+void receiver(int dataSignal[]);
 
-    for (int k = 0; k < 11; k++)
-    {
-        xnorValue[k] = bit;
+void XNOR(int dataSeq[], int bSeq[]){
+    for(i = 0; i < 11; i++){
+        if(dataSeq[i] == bSeq[i]){
+            dataSignal[dslen] = 1;
+        }else{
+            dataSignal[dslen] = 0;
+        }
+        printf("%d", dataSignal[dslen]);
+        dslen++;
     }
-
-    for (int  j= 0; j < 11; j++)
-    {
-        res[ptr] = ((xnorValue[j] == pattern[j] ? '1' : '0'));
-        ptr++;
-    }   
 }
 
-void xnorfunctionForReceiver(char arr[],char pattern[]){
+void sender(int data[]){
+    dslen = 0;
+    printf("\nBakers sequence is ");
+    for(i = 0; i < 11; i++){
+        printf("%d", bSeq[i]);
+    }
 
-    for (int  j= 0; j < 11; j++)
-    {
-        resReceiver[ptrReceiver] = ((arr[j] == pattern[j] ? '1' : '0'));
-        ptrReceiver++;
+    printf("\nEntered data is ");
+    for(i = 0; i < datalen; i++){
+        printf("%d", data[i]);
     }
     
-}
-
-void makeChunks(char res[]){
-    
-    for (int w = start; w <= end; w++)
-    {
-       chunk[w-start] = res[w];
-    }
-    start += 11;
-    end += 11;
-}
-
-void xnoresult(char arr[]){
-    for (int q = 0; q < 33; q++)
-    {
-        printf("%c",arr[q]);
-    }
-    printf("\n");
-}
-
-int main(){
-    printf("Enter data to be sent :");
-    scanf("%s",data);
-
-    for(int i = 0 ; i<3 ;i++){
-        xnorfunction(data[i],pattern);
-    }
-
-    printf("Data converted to 33 bit :");
-
-    for (int l = 0; l < 33; l++)
-    {
-        printf("%c",res[l]);
-    }
-
-    printf("\n");
-
-
-    start=0;
-    end =10;
-
-    for(int p = 0 ; p < 3;p++){          //instead of 3 write : res length / 3;
-        //0-10 11-21 22-32
-        makeChunks(res);
-        xnorfunctionForReceiver(chunk,pattern);
-    }
-
-    printf("Received data:");
-    xnoresult(resReceiver);
-    
-    printf("Extracting original data from receiverd data : ");
-    for(int g = 0 ; g<33;g++){
-        if(g%11 == 0){
-            printf("%c",resReceiver[g]);
+    for(k = 0; k < datalen; k++){
+        if(data[k] == 1){
+            for(i = 0; i < 11; i++){
+                dataSeq[i] = 1;
+            }
+            printf("\nEncoded data sequence is ");
+            XNOR(dataSeq, bSeq);
+        }
+        else if(data[k] == 0){
+            for(i = 0; i < 11; i++){
+                dataSeq[i] = 0;
+            }
+            printf("\nEncoded data sequence is ");
+            XNOR(dataSeq, bSeq);
         }
     }
-    
+    printf("\nData signal: ");
+    for (i = 0; i < dslen; i++) {
+        printf("%d", dataSignal[i]);
+    }
+    receiver(dataSignal);
+}
+
+void receiver(int dataSignal[]){
+    printf("\n\nReceived data signal: ");
+    for (i = 0; i < dslen; i++) {
+        receivedSignal[i] = dataSignal[i];
+        printf("%d", receivedSignal[i]);
+    }
+
+    int receivedDataLen = dslen / 11;
+    printf("\nReceived data should be of length %d", receivedDataLen);
+    int receivedData[receivedDataLen];
+    j = 0;
+        for(k = 0; k < 11; k++){
+            receivedDataSeq[k] = receivedSignal[j];
+            j++;
+        }
+
+}
+int main(){
+    printf("\nEnter data length : ");
+    scanf("%d", &datalen);
+    printf("\nData length is %d", datalen);
+    int data[datalen];
+    printf("\nEnter data :\n");
+    for(i = 0; i < datalen; i++){
+        scanf("\n%d", &data[i]);
+    }
+
+    sender(data);
     return 0;
+}
 }
