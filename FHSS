@@ -1,46 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
 
-#define size 32
+int main(){
 
-void sender(int *dataPackets, int packets){
-    int *frequencies = (int *)malloc(sizeof(int) * 32);
-    srand(time(NULL));
-    for(int i=0; i<packets; i++){
-        frequencies[i] = rand() % 100;
+    int size;
+    char data[10];
+    char final[3];
+    char bit;
+    int t=1;
+    
+
+    printf("Enter the size of data:-\n");
+    scanf("%d",&size);
+    
+    int loop = size / 3;
+    
+    for(int i=0;i<loop;i++){
+    printf("\nEnter the data with 3 3 bit:-\n");
+    scanf("%s",data);
+    
+
+    for(int i=0; i<3;i++){
+        final[2-i] = data[i];
+    }
+    
+    printf("\n-----------------------");
+    
+    
+    if(final[0] == '0'){
+        printf("\n data for bit 0 will be 000 will go at t%d",t);
+        t++;
+    }
+    else{
+        printf("\n data for bit 1 will be 001 will go at t%d",t);
+        t++;
     }
 
-    printf("Transmitting %d packets using Frequency hopping spread spectrum\n",packets);
-    for(int i=0; i<packets; i++){
-        printf("Data packet %d send with frequency: %d\n",i+1,frequencies[i]);
-        printf("Data: %d\n",dataPackets[i]);
+    if(final[1] == '0'){
+        printf("\n data for bit 0 will be 000 will go at t%d",t);
+        t++;
     }
+    else{
+        printf("\n data for bit 1 will be 010 will go at t%d",t);
+        t++;
+    }
+
+    if(final[2] == '0'){
+        printf("\n data for bit 0 will be 000 will go at t%d",t);
+        t++;
+    }
+    else{
+        printf("\n data for bit 1 will be 100 will go at t%d",t);
+        t++;
+    }
+    printf("\n-----------------------");
+
+   
 }
-
-void receiver(int *dataPackets, int packets){
-    printf("Data received:\n");
-    for(int i=0; i<packets; i++){
-        printf("Data packet %d: %d\n",i+1,dataPackets[i]);
-    }
-}
-
-int main()
-{
-    int packets;
-    printf("Enter number of packets to send\n");
-    scanf("%d", &packets);
-
-    int *dataPackets = (int *)malloc(sizeof(int) * size);
-    for (int i = 0; i < packets; i++)
-    {
-        printf("Enter data packet %d\n", i + 1);
-        scanf("%d", &dataPackets[i]);
-    }
-
-    sender(dataPackets, packets);
-    receiver(dataPackets, packets);
-
-    free(dataPackets);
-    return 0;
+    
+    
 }
