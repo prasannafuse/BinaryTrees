@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+int main()
+{
+
+    float tt, pt, ask;
+    printf("Enter the tt : -\n");
+    scanf("%f", &tt);
+    printf("\nEnter the pt : -\n");
+    scanf("%f", &pt);
+
+    int a = pt/tt;
+    int max = 1 + (2 * a);
+    printf("\nMaximum packets can be sent are :-%d",max);
+
+    int bit = log2(max);
+    int number_packets = pow(2,bit);
+    printf("\n Sliding Window :- %d",number_packets);
+
+    float temp = tt;
+    for(int i=1; i<=number_packets; i++){
+        printf("\n----------------------------\n");
+        printf("\n The %dth packet will send at %fth sencond and will reached at %fth second...",i,temp,temp+pt);
+        printf("\n----------------------------\n");
+
+        temp++;
+
+    }
+
+    int remaining = max-number_packets;
+
+    for(int i=1; i<=remaining; i++){
+        float ask = tt + pt+pt;
+        printf("\n----------------------------\n");
+
+        printf("\nThe acknoledgement of %dth packet will get at %fth second,",i,ask);
+        printf("\nThe %dth packet will send at %fth second,",number_packets+i,ask);
+        printf("\nThe acknoledgement of %dth packet will get at %fth second...",number_packets+1,ask+ask);
+        printf("\n----------------------------\n");
+
+        tt++;
+
+    }
+     
+
+}
